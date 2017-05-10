@@ -1,5 +1,6 @@
-#FROM microsoft/windowsservercore
-FROM microsoft/nanoserver
+# escape=`
+
+FROM microsoft/windowsservercore
 
 MAINTAINER Pat Sissons patricksissons@gmail.com
 
@@ -15,12 +16,11 @@ ENV RUNNER_REQUEST_CONCURRENCY=1
 ENV RUNNER_BUILDS_DIR=''
 ENV RUNNER_CACHE_DIR=''
 
-RUN powershell -NoProfile -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" & \
-    SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin" & \
-    choco install -y gitlab-runner & \
-    gitlab-runner install & \
-    gitlab-runner register --non-interactive
+RUN @powershell -NoProfile -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" & `
+    SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin" & `
+    choco install -y gitlab-runner
 
 ADD root/ /
 
-ENTRYPOINT ["C:\\ServiceMonitor.exe", "gitlab-runner"]
+SHELL [ "powershell", "-File" ]
+CMD entrypoint.ps1
