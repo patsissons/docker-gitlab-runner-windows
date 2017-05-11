@@ -8,3 +8,5 @@ docker run -d "%TAG%"
 
 @REM Restore the previous working directory
 POPD
+
+PAUSE

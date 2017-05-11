@@ -1,20 +1,30 @@
-$installPath = 'C:\Gitlab-Runner'
-$exeName = 'gitlab-runner.exe'
-$serviceName = 'gitlab-runner'
+# $installPath = 'C:\Gitlab-Runner'
+# $exeName = 'gitlab-runner.exe'
+# $serviceName = 'gitlab-runner'
 
-$exePath = Join-Path $installPath $exeName
+# $exePath = Join-Path $installPath $exeName
 
-If (!(Get-Service $serviceName -ErrorAction SilentlyContinue))
-{
-    Write-Output "installing $serviceName service..."
-    & $exePath install
+# # stop service if it is already started
+# Stop-Service -Name $serviceName -ErrorAction SilentlyContinue
 
-    Write-Output "registering $serviceName agent..."
-    & $exePath register --non-interactive
-}
+# # run startup scripts
+# Get-ChildItem 'C:\startup' | Where-Object { $_.Name -match '\d+.*\.ps1' } | ForEach-Object { & $_.FullName }
 
-Write-Output "Starting up $serviceName service..."
-Start-Service -Name $serviceName
+# # install service if not already installed
+# If (!(Get-Service $serviceName -ErrorAction SilentlyContinue))
+# {
+#     Write-Output "installing $serviceName service..."
+#     & $exePath install
 
-Write-Output "Setting up watcher for $serviceName service..."
-& .\Wait-Service.ps1 -ServiceName $serviceName
+#     Write-Output "registering $serviceName agent..."
+#     & $exePath register --non-interactive
+# }
+
+# Write-Output "Starting up $serviceName service..."
+# Start-Service -Name $serviceName
+
+# Write-Output "Setting up watcher for $serviceName service..."
+# & .\Wait-Service.ps1 -ServiceName $serviceName
+
+
+& .\Wait-Service.ps1 -ServiceName EventLog
